@@ -115,5 +115,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MultiDesktop-exe
-          path: target/gluonfx/host/gvm/Multi.exe
+          path: target/gluonfx/x86_64-windows/MultiMobile.exe
 

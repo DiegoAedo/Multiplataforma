@@ -52,7 +52,6 @@
             <artifactId>javafx-media</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -148,7 +147,6 @@
         </profile>
 
         <!-- Perfil para Windows -->
-        <!-- Perfil para Windows -->
         <profile>
             <id>win</id>
             <properties>
@@ -172,11 +170,19 @@
                                 <bundleName>MultiMobile</bundleName>
                                 <skipSigning>true</skipSigning>
                             </releaseConfiguration>
+                            <!-- Incluir la carpeta de recursos de audio -->
+                            <reflectionList>
+                                <list>com.sun.media.jfxmediaimpl.MediaUtils</list>
+                                <list>com.sun.media.jfxmediaimpl.NativeMediaManager</list>
+                                <list>com.sun.media.jfxmediaimpl.NativeMediaManager$NativeMediaManagerInitializer</list>
+                            </reflectionList>
+                            <runtimeArgs>
+                                <runtimeArg>--include-resources=.*\.mp3</runtimeArg>
+                            </runtimeArgs>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-
     </profiles>
 </project>
