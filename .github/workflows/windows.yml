@@ -1,0 +1,104 @@
+name: Build MultiPlatform App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    name: Build for Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Instalar Visual Studio Build Tools + Workload de C++
+      - name: Install Visual Studio Build Tools
+        shell: cmd
+        run: |
+          echo Installing Visual Studio Build Tools...
+          choco install visualstudio2022buildtools --force --confirm
+          choco install visualstudio2022-workload-vctools --force --confirm
+
+      # Instalar vswhere para localizar vcvars64.bat
+      - name: Install vswhere
+        shell: cmd
+        run: |
+          echo Installing vswhere...
+          choco install vswhere --force --confirm
+
+      # Desinstalar Maven previo
+      - name: Uninstall existing Maven (Windows)
+        shell: cmd
+        continue-on-error: true
+        run: |
+          echo Removing any existing Maven versions...
+          choco uninstall maven -y || echo "No previous Maven installation found"
+          rmdir /s /q C:\maven || echo "No existing C:\maven directory"
+          reg delete "HKCU\Environment" /F /V MAVEN_HOME || echo "No existing MAVEN_HOME"
+          reg delete "HKCU\Environment" /F /V PATH || echo "No existing PATH entry for Maven"
+
+      # Instalar Maven 3.8.8 y configurar variables en la sesión actual
+      - name: Install Maven 3.8.8 (Windows)
+        shell: cmd
+        run: |
+          echo Downloading Maven 3.8.8...
+          curl -L -o apache-maven-3.8.8-bin.zip https://archive.apache.org/dist/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip
+          powershell -Command "Expand-Archive -Path apache-maven-3.8.8-bin.zip -DestinationPath C:\maven"
+          echo Setting environment variables in current session...
+          set MAVEN_HOME=C:\maven\apache-maven-3.8.8
+          set PATH=C:\maven\apache-maven-3.8.8\bin;%PATH%
+          echo MAVEN_HOME set to: %MAVEN_HOME%
+          echo Updated PATH: %PATH%
+          echo "C:\maven\apache-maven-3.8.8\bin" >> %GITHUB_PATH%
+
+      # Verificar Maven
+      - name: Verify Maven Installation (Windows)
+        shell: cmd
+        run: |
+          echo Checking Maven Installation...
+          if exist C:\maven\apache-maven-3.8.8\bin\mvn.cmd (
+            echo Maven found in expected location
+            C:\maven\apache-maven-3.8.8\bin\mvn.cmd -version
+          ) else (
+            echo Maven not found!
+            exit 1
+          )
+
+      # Configurar Java 17 y GraalVM
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up GraalVM (Windows)
+        uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '17'
+          graalvm-version: '22.3.0'
+          set-java-home: true
+
+      - name: Verify GraalVM Installation (Windows)
+        shell: cmd
+        run: |
+          echo Checking GRAALVM_HOME...
+          echo %GRAALVM_HOME%
+
+      # Configurar Visual Studio y compilar en el mismo paso
+      - name: Configure Visual Studio Environment and Build
+        shell: cmd
+        run: |
+          echo Locating Visual Studio installation with vswhere...
+          for /f "delims=" %%I in ('vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath') do set VSINSTALL=%%I
+          echo Found Visual Studio at %VSINSTALL%
+          if not defined VSINSTALL (
+            echo "No Visual Studio installation found!"
+            exit 1
+          )
+          echo Calling vcvars64.bat...
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars64.bat" && where cl.exe
+          echo Building with GluonFX...
+          C:\maven\apache-maven-3.8.8\bin\mvn.cmd clean gluonfx:build -P win

@@ -47,6 +47,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: multi-dmg
-          path: target/gluonfx/x86_64-darwin/Multi-1.0.0.dmg
+          path: target/gluonfx/x86_64-darwin/MultiMobile-1.0.0.dmg
 
 
