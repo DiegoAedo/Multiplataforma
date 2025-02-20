@@ -11,16 +11,17 @@
     <version>1.0</version>
 
     <properties>
-
+        <!-- Configuración de Java -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <!-- Valor por defecto (se sobrescribe en perfiles) -->
         <mainClass>com.example.MainMobile</mainClass>
         <gluonfx.maven.plugin.version>1.0.23</gluonfx.maven.plugin.version>
         <javafx.version>17.0.2</javafx.version>
         <charm.version>6.0.5</charm.version>
     </properties>
 
-    <!-- Repositorio de Gluon (necesario para descargar Charm) -->
+    <!-- Repositorio para las dependencias de Gluon (Charmed) -->
     <repositories>
         <repository>
             <id>gluon-releases</id>
@@ -86,6 +87,8 @@
             <properties>
                 <target>android</target>
                 <packageType>apk</packageType>
+                <!-- Aquí se usa la MainMobile para dispositivos móviles -->
+                <mainClass>com.example.MainMobile</mainClass>
             </properties>
             <build>
                 <plugins>
@@ -99,7 +102,6 @@
                                 <packageType>apk</packageType>
                                 <skipSigning>true</skipSigning>
                             </releaseConfiguration>
-                            <!-- En Android, normalmente no se requieren runtimeArgs -->
                             <runtimeArgs/>
                         </configuration>
                     </plugin>
@@ -116,6 +118,8 @@
             <properties>
                 <target>host</target>
                 <packageType>dmg</packageType>
+                <!-- Suponiendo que en macOS se usa MainMobile -->
+                <mainClass>com.example.MainMobile</mainClass>
             </properties>
             <build>
                 <plugins>
@@ -129,6 +133,37 @@
                                 <vendor>MyCompany</vendor>
                                 <description>Aplicación Nativa Gluon Mobile de Ejemplo</description>
                                 <packageType>${packageType}</packageType>
+                                <skipSigning>true</skipSigning>
+                            </releaseConfiguration>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Perfil para Windows -->
+        <profile>
+            <id>win</id>
+            <properties>
+                <!-- En Windows se construye una aplicación de escritorio -->
+                <target>host</target>
+                <packageType>exe</packageType>
+                <!-- En este perfil se utiliza MainDesktop -->
+                <mainClass>com.example.MainDesktop</mainClass>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>${mainClass}</mainClass>
+                            <target>${target}</target>
+                            <releaseConfiguration>
+                                <vendor>MyCompany</vendor>
+                                <description>Aplicación Nativa Gluon Desktop de Ejemplo</description>
+                                <packageType>${packageType}</packageType>
+                                <bundleName>MultiDesktop</bundleName>
                                 <skipSigning>true</skipSigning>
                             </releaseConfiguration>
                         </configuration>

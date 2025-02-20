@@ -2,9 +2,9 @@ name: Build MultiPlatform App
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build-windows:
@@ -102,3 +102,15 @@ jobs:
           call "%VSINSTALL%\VC\Auxiliary\Build\vcvars64.bat" && where cl.exe
           echo Building with GluonFX...
           C:\maven\apache-maven-3.8.8\bin\mvn.cmd clean gluonfx:build -P win
+
+      - name: List generated files
+        run: |
+          echo "Listando archivos generados..."
+          dir /s /b target\gluonfx\host\gvm\*.exe
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MultiDesktop-exe
+          path: target/gluonfx/host/gvm/*.exe
+
