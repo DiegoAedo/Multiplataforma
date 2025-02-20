@@ -2,9 +2,9 @@ name: Build MultiPlatform App
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build-windows:
@@ -78,8 +78,9 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '17'
-          graalvm-version: '22.3.0'
+          version: '22.3.0'
           set-java-home: true
+
 
       - name: Verify GraalVM Installation (Windows)
         shell: cmd

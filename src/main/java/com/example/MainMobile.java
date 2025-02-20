@@ -9,13 +9,18 @@ public class MainMobile extends MobileApplication {
 
     @Override
     public void init() {
-        // Registra la vista con la clave HOME_VIEW
-        addViewFactory(HOME_VIEW, () -> new View(new Label("Hello Victor!")));
+        // Se define la vista principal usando el identificador HOME_VIEW
+        addViewFactory(HOME_VIEW, () -> {
+            Label label = new Label("Hello Victor!");
+            return new View(label);
+        });
     }
 
     @Override
     public void postInit(Scene scene) {
-        // Cambia a la vista principal para que se muestre
+        // Se carga la hoja de estilos para que se apliquen los estilos de Gluon Mobile (asegúrate de que el recurso exista)
+        scene.getStylesheets().add(getClass().getResource("/css/glisten.css").toExternalForm());
+        // Se muestra la vista principal
         switchView(HOME_VIEW);
     }
 
