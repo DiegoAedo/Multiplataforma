@@ -9,13 +9,12 @@ public class MainMobile extends MobileApplication {
 
     @Override
     public void init() {
-        // Vista simple con un Label
+        System.out.println("Iniciando MainMobile");
         addViewFactory(HOME_VIEW, () -> new View(new Label("¡Hola Gluon Mobile!")));
     }
 
     @Override
     public void postInit(Scene scene) {
-        // Aplicar tema o configuraciones globales
     }
 
     public static void main(String[] args) {
