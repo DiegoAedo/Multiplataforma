@@ -78,7 +78,7 @@ jobs:
         uses: graalvm/setup-graalvm@v1
         with:
           java-version: '17'
-          version: '22.3.0'
+          version: '22.3.2'
           set-java-home: true
 
 
