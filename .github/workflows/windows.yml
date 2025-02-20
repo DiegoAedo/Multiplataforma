@@ -104,10 +104,11 @@ jobs:
           echo Building with GluonFX...
           C:\maven\apache-maven-3.8.8\bin\mvn.cmd clean gluonfx:build -P win
 
-      - name: List generated files
+      - name: List generated files (PowerShell)
+        shell: pwsh
         run: |
-          echo "Listando todos los archivos..."
-          find . -type f
+          Write-Host "Listando todos los archivos..."
+          Get-ChildItem -Recurse -File | ForEach-Object { $_.FullName }
 
 
       - name: Upload Windows Artifact

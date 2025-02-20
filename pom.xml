@@ -148,10 +148,10 @@
         </profile>
 
         <!-- Perfil para Windows -->
+        <!-- Perfil para Windows -->
         <profile>
             <id>win</id>
             <properties>
-                <!-- En Windows se construye una aplicación de escritorio -->
                 <target>host</target>
                 <packageType>exe</packageType>
                 <!-- En este perfil se utiliza MainDesktop -->
@@ -169,7 +169,7 @@
                                 <vendor>MyCompany</vendor>
                                 <description>Aplicación Nativa Gluon Desktop de Ejemplo</description>
                                 <packageType>${packageType}</packageType>
-                                <bundleName>MultiDesktop</bundleName>
+                                <bundleName>MultiMobile</bundleName>
                                 <skipSigning>true</skipSigning>
                             </releaseConfiguration>
                         </configuration>
@@ -177,5 +177,6 @@
                 </plugins>
             </build>
         </profile>
+
     </profiles>
 </project>
