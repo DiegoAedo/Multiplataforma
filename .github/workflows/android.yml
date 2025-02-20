@@ -1,0 +1,58 @@
+name: Build ejejmplo on Android
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Java (Temurin)
+        uses: actions/setup-java@v2
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Maven 3.8.8
+        run: |
+          curl -O https://archive.apache.org/dist/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.tar.gz
+          tar -xzf apache-maven-3.8.8-bin.tar.gz
+          echo "$(pwd)/apache-maven-3.8.8/bin" >> $GITHUB_PATH
+
+      - name: Print environment
+        run: env
+
+      - name: Unset Android environment
+        run: |
+          echo "ANDROID_HOME=" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=" >> $GITHUB_ENV
+
+      - name: Download GraalVM CE for Java 17
+        run: |
+          echo "Downloading GraalVM CE for Java 17..."
+          curl -L -o graalvm.tar.gz "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.1/graalvm-ce-java17-linux-amd64-22.3.1.tar.gz"
+          tar -xzf graalvm.tar.gz
+          echo "GRAALVM_HOME=$(pwd)/graalvm-ce-java17-22.3.1" >> $GITHUB_ENV
+
+      - name: Build and Package (GluonFX for Android)
+        run: |
+          # Importante: Invocamos el perfil android
+          mvn -Pandroid gluonfx:build gluonfx:package
+
+      - name: List generated files
+        run: |
+          echo "Listando todos los archivos..."
+          find . -type f
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ejejmplo-apk
+          path: target/gluonfx/aarch64-android/gvm/ejejmplo.apk
