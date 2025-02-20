@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>Multi</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <mainClass>com.example.MainDesktop</mainClass>
+        <gluonfx.maven.plugin.version>1.0.23</gluonfx.maven.plugin.version>
+        <javafx.version>17.0.2</javafx.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.gluonhq</groupId>
+                <artifactId>gluonfx-maven-plugin</artifactId>
+                <version>${gluonfx.maven.plugin.version}</version>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                    <target>${target}</target>
+                    <releaseConfiguration>
+                        <vendor>MyCompany</vendor>
+                        <description>Aplicación Nativa de ejejmplo</description>
+                        <packageType>${packageType}</packageType>
+                        <macAppStore>false</macAppStore>
+                        <bundleName>ejejmplo</bundleName>
+                        <bundleShortVersion>1.0</bundleShortVersion>
+                        <bundleVersion>1.0.0</bundleVersion>
+                        <versionCode>1</versionCode>
+                        <skipSigning>true</skipSigning>
+                    </releaseConfiguration>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Perfil para Android -->
+        <profile>
+            <id>android</id>
+            <properties>
+                <target>android</target>
+                <packageType>apk</packageType>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <configuration>
+                            <target>android</target>
+                            <releaseConfiguration>
+                                <packageType>apk</packageType>
+                                <skipSigning>true</skipSigning>
+                            </releaseConfiguration>
+                            <!-- runtimeArgs vacío en Android -->
+                            <runtimeArgs/>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Perfil para macOS (activo por defecto) -->
+        <profile>
+            <id>mac</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <target>host</target>
+                <packageType>dmg</packageType>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.gluonhq</groupId>
+                        <artifactId>gluonfx-maven-plugin</artifactId>
+                        <configuration>
+                            <target>${target}</target>
+                            <releaseConfiguration>
+                                <vendor>MyCompany</vendor>
+                                <description>Aplicación Nativa de ejejmplo</description>
+                                <packageType>${packageType}</packageType>
+                                <macAppStore>false</macAppStore>
+                                <bundleName>ejejmplo</bundleName>
+                                <bundleShortVersion>1.0</bundleShortVersion>
+                                <bundleVersion>1.0.0</bundleVersion>
+                                <versionCode>1</versionCode>
+                                <skipSigning>true</skipSigning>
+                            </releaseConfiguration>
+                            <!-- runtimeArgs específicos de mac -->
+                            <runtimeArgs>
+                                <runtimeArg>-H:+UnlockExperimentalVMOptions</runtimeArg>
+                                <runtimeArg>--report-unsupported-elements-at-runtime</runtimeArg>
+                                <runtimeArg>--verbose</runtimeArg>
+                                <runtimeArg>--add-opens=java.base/java.nio=ALL-UNNAMED</runtimeArg>
+                                <runtimeArg>--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</runtimeArg>
+                                <runtimeArg>--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED</runtimeArg>
+                                <runtimeArg>--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED</runtimeArg>
+                                <runtimeArg>--add-exports=java.desktop/sun.awt.webkit=ALL-UNNAMED</runtimeArg>
+                                <runtimeArg>--add-exports=javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED</runtimeArg>
+                                <runtimeArg>--initialize-at-build-time=ch.qos.logback,javafx</runtimeArg>
+                                <runtimeArg>--initialize-at-build-time=com.sun.management.internal.OperatingSystemImpl</runtimeArg>
+                                <runtimeArg>--initialize-at-run-time=sun.awt,javafx.scene.web.WebEngine,javafx.scene.web.WebView,com.sun.webkit.WebPage,com.sun.webkit.FileSystem,com.sun.media.jfxmediaimpl.MediaUtils,com.sun.media.jfxmediaimpl.NativeMediaManager,com.sun.media.jfxmediaimpl.NativeMediaManager\$NativeMediaManagerInitializer</runtimeArg>
+                                <runtimeArg>--allow-incomplete-substitutions</runtimeArg>
+                                <runtimeArg>-H:+ReportExceptionStackTraces</runtimeArg>
+                                <runtimeArg>-Xmx1024m</runtimeArg>
+                                <runtimeArg>-Xms512m</runtimeArg>
+                                <runtimeArg>--gc=G1</runtimeArg>
+                                <runtimeArg>-H:G1RegionSize=2m</runtimeArg>
+                                <runtimeArg>-R:MaxGCPauseMillis=100</runtimeArg>
+                                <runtimeArg>--gc=epsilon</runtimeArg>
+                                <runtimeArg>-XX:MaximumHeapSizePercent=75</runtimeArg>
+                                <runtimeArg>-H:+UseLowLatencyGC</runtimeArg>
+                                <runtimeArg>-XX:+DisableExplicitGC</runtimeArg>
+                                <runtimeArg>-Djava.awt.headless=false</runtimeArg>
+                            </runtimeArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
