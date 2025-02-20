@@ -1,37 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>Multi</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>MultiMobile</artifactId>
+    <version>1.0</version>
 
     <properties>
+        <!-- Configuración de Java -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <mainClass>com.example.MainDesktop</mainClass>
+        <!-- Clase principal para Gluon Mobile -->
+        <mainClass>com.example.MainMobile</mainClass>
+        <!-- Versión del plugin GluonFX (ajústala si es necesario) -->
         <gluonfx.maven.plugin.version>1.0.23</gluonfx.maven.plugin.version>
+        <!-- Versión de JavaFX -->
         <javafx.version>17.0.2</javafx.version>
+        <!-- Versión de Gluon Mobile (Charm) -->
+        <charm.version>6.0.5</charm.version>
     </properties>
 
+    <!-- Repositorio de Gluon (necesario para descargar Charm) -->
+    <repositories>
+        <repository>
+            <id>gluon-releases</id>
+            <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <!-- Dependencias de JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.2</version>
+            <version>${javafx.version}</version>
+        </dependency>
+        <!-- Dependencia de Gluon Mobile (Glisten) -->
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>charm-glisten</artifactId>
+            <version>${charm.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-
+            <!-- Plugin de compilación -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -41,7 +64,7 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-
+            <!-- Plugin GluonFX para crear imágenes nativas -->
             <plugin>
                 <groupId>com.gluonhq</groupId>
                 <artifactId>gluonfx-maven-plugin</artifactId>
@@ -51,18 +74,12 @@
                     <target>${target}</target>
                     <releaseConfiguration>
                         <vendor>MyCompany</vendor>
-                        <description>Aplicación Nativa de ejejmplo</description>
+                        <description>Aplicación Nativa Gluon Mobile de Ejemplo</description>
                         <packageType>${packageType}</packageType>
-                        <macAppStore>false</macAppStore>
-                        <bundleName>ejejmplo</bundleName>
-                        <bundleShortVersion>1.0</bundleShortVersion>
-                        <bundleVersion>1.0.0</bundleVersion>
-                        <versionCode>1</versionCode>
                         <skipSigning>true</skipSigning>
                     </releaseConfiguration>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
@@ -80,12 +97,13 @@
                         <groupId>com.gluonhq</groupId>
                         <artifactId>gluonfx-maven-plugin</artifactId>
                         <configuration>
+                            <mainClass>${mainClass}</mainClass>
                             <target>android</target>
                             <releaseConfiguration>
                                 <packageType>apk</packageType>
                                 <skipSigning>true</skipSigning>
                             </releaseConfiguration>
-                            <!-- runtimeArgs vacío en Android -->
+                            <!-- En Android, normalmente no se requieren runtimeArgs -->
                             <runtimeArgs/>
                         </configuration>
                     </plugin>
@@ -109,45 +127,14 @@
                         <groupId>com.gluonhq</groupId>
                         <artifactId>gluonfx-maven-plugin</artifactId>
                         <configuration>
+                            <mainClass>${mainClass}</mainClass>
                             <target>${target}</target>
                             <releaseConfiguration>
                                 <vendor>MyCompany</vendor>
-                                <description>Aplicación Nativa de ejejmplo</description>
+                                <description>Aplicación Nativa Gluon Mobile de Ejemplo</description>
                                 <packageType>${packageType}</packageType>
-                                <macAppStore>false</macAppStore>
-                                <bundleName>ejejmplo</bundleName>
-                                <bundleShortVersion>1.0</bundleShortVersion>
-                                <bundleVersion>1.0.0</bundleVersion>
-                                <versionCode>1</versionCode>
                                 <skipSigning>true</skipSigning>
                             </releaseConfiguration>
-                            <!-- runtimeArgs específicos de mac -->
-                            <runtimeArgs>
-                                <runtimeArg>-H:+UnlockExperimentalVMOptions</runtimeArg>
-                                <runtimeArg>--report-unsupported-elements-at-runtime</runtimeArg>
-                                <runtimeArg>--verbose</runtimeArg>
-                                <runtimeArg>--add-opens=java.base/java.nio=ALL-UNNAMED</runtimeArg>
-                                <runtimeArg>--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</runtimeArg>
-                                <runtimeArg>--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED</runtimeArg>
-                                <runtimeArg>--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED</runtimeArg>
-                                <runtimeArg>--add-exports=java.desktop/sun.awt.webkit=ALL-UNNAMED</runtimeArg>
-                                <runtimeArg>--add-exports=javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED</runtimeArg>
-                                <runtimeArg>--initialize-at-build-time=ch.qos.logback,javafx</runtimeArg>
-                                <runtimeArg>--initialize-at-build-time=com.sun.management.internal.OperatingSystemImpl</runtimeArg>
-                                <runtimeArg>--initialize-at-run-time=sun.awt,javafx.scene.web.WebEngine,javafx.scene.web.WebView,com.sun.webkit.WebPage,com.sun.webkit.FileSystem,com.sun.media.jfxmediaimpl.MediaUtils,com.sun.media.jfxmediaimpl.NativeMediaManager,com.sun.media.jfxmediaimpl.NativeMediaManager\$NativeMediaManagerInitializer</runtimeArg>
-                                <runtimeArg>--allow-incomplete-substitutions</runtimeArg>
-                                <runtimeArg>-H:+ReportExceptionStackTraces</runtimeArg>
-                                <runtimeArg>-Xmx1024m</runtimeArg>
-                                <runtimeArg>-Xms512m</runtimeArg>
-                                <runtimeArg>--gc=G1</runtimeArg>
-                                <runtimeArg>-H:G1RegionSize=2m</runtimeArg>
-                                <runtimeArg>-R:MaxGCPauseMillis=100</runtimeArg>
-                                <runtimeArg>--gc=epsilon</runtimeArg>
-                                <runtimeArg>-XX:MaximumHeapSizePercent=75</runtimeArg>
-                                <runtimeArg>-H:+UseLowLatencyGC</runtimeArg>
-                                <runtimeArg>-XX:+DisableExplicitGC</runtimeArg>
-                                <runtimeArg>-Djava.awt.headless=false</runtimeArg>
-                            </runtimeArgs>
                         </configuration>
                     </plugin>
                 </plugins>
