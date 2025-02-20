@@ -11,16 +11,12 @@
     <version>1.0</version>
 
     <properties>
-        <!-- Configuración de Java -->
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <!-- Clase principal para Gluon Mobile -->
         <mainClass>com.example.MainMobile</mainClass>
-        <!-- Versión del plugin GluonFX (ajústala si es necesario) -->
         <gluonfx.maven.plugin.version>1.0.23</gluonfx.maven.plugin.version>
-        <!-- Versión de JavaFX -->
         <javafx.version>17.0.2</javafx.version>
-        <!-- Versión de Gluon Mobile (Charm) -->
         <charm.version>6.0.5</charm.version>
     </properties>
 

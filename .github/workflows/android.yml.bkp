@@ -1,4 +1,4 @@
-name: Build on Android
+name: Build ejejmplo on Android
 
 on:
   push:
@@ -26,9 +26,30 @@ jobs:
           tar -xzf apache-maven-3.8.8-bin.tar.gz
           echo "$(pwd)/apache-maven-3.8.8/bin" >> $GITHUB_PATH
 
+      - name: Print environment
+        run: env
+
+      - name: Unset Android environment
+        run: |
+          echo "ANDROID_HOME=" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=" >> $GITHUB_ENV
+
+      - name: Download GraalVM CE for Java 17
+        run: |
+          echo "Downloading GraalVM CE for Java 17..."
+          curl -L -o graalvm.tar.gz "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-22.3.1/graalvm-ce-java17-linux-amd64-22.3.1.tar.gz"
+          tar -xzf graalvm.tar.gz
+          echo "GRAALVM_HOME=$(pwd)/graalvm-ce-java17-22.3.1" >> $GITHUB_ENV
+
       - name: Build and Package (GluonFX for Android)
         run: |
+          # Importante: Invocamos el perfil android
           mvn -Pandroid gluonfx:build gluonfx:package
+
+      - name: List generated files
+        run: |
+          echo "Listando todos los archivos..."
+          find . -type f
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
