@@ -2,9 +2,9 @@ name: Build ejejmplo on Android
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -55,4 +55,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ejejmplo-apk
-          path: target/gluonfx/aarch64-android/gvm/ejejmplo.apk
+          path: target/gluonfx/aarch64-android/gvm/multi.apk
