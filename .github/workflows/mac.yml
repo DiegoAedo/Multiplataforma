@@ -1,7 +1,11 @@
 name: Build ejejmplo on macOS
 
 on:
-  workflow_dispatch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 
 jobs:
   build:
